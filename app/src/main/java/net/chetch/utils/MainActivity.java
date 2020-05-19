@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 
 import net.chetch.utilities.EnumTypeAdapater;
 
-
 public class MainActivity extends AppCompatActivity {
 
     public enum EnumTest{
