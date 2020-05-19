@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
         ENUM_VAL3
     }
 
-
     public enum EnumTest2{
         ENUM2_VAL1,
         ENUM2_VAL2,
