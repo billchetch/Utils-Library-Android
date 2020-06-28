@@ -1,6 +1,11 @@
 package net.chetch.utilities;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -9,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -17,9 +23,12 @@ import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -340,4 +349,74 @@ public class Utils {
         t.printStackTrace(new PrintWriter(stackTrace));
         return stackTrace.toString();
     }
+
+    /*
+    Download funcs
+     */
+    public static Bitmap getImage(String url) throws Exception{
+        InputStream input = new java.net.URL(url).openStream();
+        return BitmapFactory.decodeStream(input);
+    }
+
+    public static void downloadImage(String url, final Observer<Bitmap> observer){
+        final String url2download = url;
+        try {
+            Runnable runnable = new Runnable(){
+                public void run(){
+                    try{
+                        Bitmap bm = getImage(url2download);
+                        if(observer != null){
+                            observer.onChanged(bm);
+                        }
+                    } catch (Exception e){
+                        if(observer != null){
+                            observer.onChanged(null);
+                        }
+                        e.printStackTrace();
+                    }
+                }
+            };
+            Thread downloadThread = new Thread(runnable);
+            downloadThread.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void downloadImages(String[] urls, final Observer<HashMap<String, Bitmap>> observer){
+        downloadImages(Arrays.asList(urls), observer);
+    }
+
+    public static void downloadImages(Set<String> urls, final Observer<HashMap<String, Bitmap>> observer){
+        downloadImages(new ArrayList<>(urls), observer);
+    }
+
+    public static void downloadImages(List<String> urls, final Observer<HashMap<String, Bitmap>> observer){
+        final List<String> urls2download = urls;
+
+        try {
+            Runnable runnable = new Runnable(){
+                public void run(){
+                    HashMap<String, Bitmap> bitmaps = new HashMap<>();
+                    for(String url : urls2download){
+                        try{
+                            bitmaps.put(url, getImage(url));
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                    if(observer != null){
+                        observer.onChanged(bitmaps);
+                    }
+                }
+            };
+            Thread downloadThread = new Thread(runnable);
+            downloadThread.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
