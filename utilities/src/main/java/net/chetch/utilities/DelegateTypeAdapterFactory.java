@@ -1,5 +1,7 @@
 package net.chetch.utilities;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -11,27 +13,27 @@ import java.util.ArrayList;
 
 public class DelegateTypeAdapterFactory implements TypeAdapterFactory {
 
-    private ArrayList<Class> typeAdapaters = new ArrayList<>();
+    public ArrayList<DelegateTypeAdapter> typeAdapaters = new ArrayList<>();
 
-    public void addTypeAdapater(Class typeAdapaterClass){
-        typeAdapaters.add(typeAdapaterClass);
+    public void clearTypeAdapaters(){
+        typeAdapaters.clear();
     }
 
+    public void addTypeAdapater(DelegateTypeAdapter typeAdapter){
+        typeAdapaters.add(typeAdapter);
+    }
 
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type){
         final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
 
-        DelegateTypeAdapter<T> typeAdapter = null;
-        for(Class typeAdapterClass : typeAdapaters){
+        for(DelegateTypeAdapter typeAdapter : typeAdapaters){
            try {
-               Method m = typeAdapterClass.getMethod("isAdapterForType", Type.class);
-               if((boolean)m.invoke(null, type.getType())){
-                   typeAdapter = (DelegateTypeAdapter<T>)typeAdapterClass.newInstance();
+               if(typeAdapter.isAdapterForType(type.getType())) {
                    typeAdapter.setDelegate(delegate);
-                   return typeAdapter;
+                   return typeAdapter.newInstance();
                }
            } catch (Exception e){
-
+                Log.e("DTAF", e.getMessage());
            }
         }
 
