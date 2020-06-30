@@ -29,8 +29,8 @@ public class DelegateTypeAdapterFactory implements TypeAdapterFactory {
         for(DelegateTypeAdapter typeAdapter : typeAdapaters){
            try {
                if(typeAdapter.isAdapterForType(type.getType())) {
-                   typeAdapter.setDelegate(delegate);
-                   return typeAdapter.newInstance();
+                   typeAdapter.setDelegate(gson, delegate);
+                   return typeAdapter.useInstance();
                }
            } catch (Exception e){
                 Log.e("DTAF", e.getMessage());

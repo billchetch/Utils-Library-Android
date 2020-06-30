@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public DelegateTypeAdapter<String> newInstance() {
+        public DelegateTypeAdapter<String> useInstance() {
             StringTypeAdapater ta = (StringTypeAdapater)create();
             ta.s = s;
             return ta;
@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 //if(typeAdapter.isAdapterForType(type.getType())) {
                     //typeAdapter.setDelegate(delegate);
-                    DelegateTypeAdapter ta = typeAdapter.newInstance();
-                    ta.setDelegate(null);
+                    DelegateTypeAdapter ta = typeAdapter.useInstance();
+
                 //}
             } catch (Exception e){
                 Log.e("DTAF", e.getMessage());

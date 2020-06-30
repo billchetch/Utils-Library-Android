@@ -2,6 +2,7 @@ package net.chetch.utilities;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.stream.JsonReader;
@@ -12,11 +13,13 @@ import java.lang.reflect.Type;
 
 abstract public class DelegateTypeAdapter<T> extends TypeAdapter<T>{
 
+    protected Gson gson;
     protected TypeAdapter<T> delegate;
 
     abstract public boolean isAdapterForType(Type t);
 
-    public void setDelegate(TypeAdapter<T> delegate){
+    public void setDelegate(Gson gson, TypeAdapter<T> delegate){
+        this.gson = gson;
         this.delegate = delegate;
     }
 
@@ -28,11 +31,13 @@ abstract public class DelegateTypeAdapter<T> extends TypeAdapter<T>{
         return delegate.read(in);
     }
 
+
+
     //helper method when writing new instance
     protected DelegateTypeAdapter<T> create() {
         try {
             DelegateTypeAdapter<T> ta = getClass().getConstructor().newInstance();
-            ta.setDelegate(delegate);
+            ta.setDelegate(gson, delegate);
             return ta;
         } catch (Exception e){
             Log.e("DTA", e.getMessage());
@@ -41,5 +46,7 @@ abstract public class DelegateTypeAdapter<T> extends TypeAdapter<T>{
     }
 
     //override this to create an instance for delegate type adapter factory
-    abstract public DelegateTypeAdapter<T> newInstance();
+    public DelegateTypeAdapter<T> useInstance(){
+        return this;
+    }
 }
