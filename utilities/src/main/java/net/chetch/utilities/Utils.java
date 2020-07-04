@@ -38,7 +38,7 @@ Utils class for surf forecast data xxx
  */
 
 public class Utils {
-    public enum Conversions{ METERS_2_FEET, KPH_2_MPH, KM_2_MILES , ROTATE_180, DEG_2_COMPASS}
+    public enum Conversions{ METERS_2_FEET, KPH_2_MPH, KM_2_MILES, MILES_2_KM, MPH_2_KPH, ROTATE_180, DEG_2_COMPASS}
 
     //TODO: change this to use resources so its translatable
     final private static String[] COMPASS = new String[]{"N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"};
@@ -67,6 +67,12 @@ public class Utils {
                 double km = Double.parseDouble(val);
                 double mi = km*0.6;
                 return round2string(mi, dp);
+
+            case MILES_2_KM:
+            case MPH_2_KPH:
+                double miles = Double.parseDouble(val);
+                double kms = miles/0.6;
+                return round2string(kms, dp);
 
             case ROTATE_180:
                 double deg = Double.parseDouble(val);

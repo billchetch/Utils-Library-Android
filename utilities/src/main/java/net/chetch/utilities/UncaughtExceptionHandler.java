@@ -7,7 +7,7 @@ import android.content.Intent;
 
 public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    final public static String ACTION_UNCAUGHT_EXCEPTION = "com.bulan_baru.broadcast.UNCAUGHT_EXCEPTION";
+    final public static String ACTION_UNCAUGHT_EXCEPTION = "net.chetch.broadcast.UNCAUGHT_EXCEPTION";
     final public static String REPORT = "uce_report";
     public static final String LINE_FEED = "\n";
 
