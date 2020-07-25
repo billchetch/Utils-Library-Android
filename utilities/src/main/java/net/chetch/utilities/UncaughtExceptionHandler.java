@@ -7,7 +7,7 @@ import android.content.Intent;
 
 public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    final public static String ACTION_UNCAUGHT_EXCEPTION = "net.chetch.broadcast.UNCAUGHT_EXCEPTION";
+    final public static String ACTION_UNCAUGHT_EXCEPTION = "UNCAUGHT_EXCEPTION";
     final public static String REPORT = "uce_report";
     public static final String LINE_FEED = "\n";
 
@@ -25,7 +25,7 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
 
     protected Intent buildIntent(){
         Intent intent = new Intent();
-        intent.setAction(ACTION_UNCAUGHT_EXCEPTION);
+        intent.setAction(context.getClass().getCanonicalName() + "." + ACTION_UNCAUGHT_EXCEPTION);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;

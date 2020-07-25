@@ -187,6 +187,7 @@ public class Utils {
         Calendar cal1 = calendarSetHour(now, 0);
         Calendar cal2 = (Calendar)cal1.clone();
         cal2.add(Calendar.DATE, 1);
+        cal2.add(Calendar.MILLISECOND, -1);
         return dateInRange(cal, cal1, cal2);
     }
 

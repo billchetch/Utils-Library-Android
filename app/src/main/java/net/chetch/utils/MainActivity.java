@@ -41,19 +41,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DelegateTypeAdapterFactory f = new DelegateTypeAdapterFactory();
-        f.addTypeAdapater(new StringTypeAdapater());
+        Calendar cal1 = Calendar.getInstance();
+        cal1 = Utils.calendarSetHour(cal1, 0);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.add(Calendar.DATE, 1);
+        cal2 = Utils.calendarSetHour(cal2, 0);
 
-        for(DelegateTypeAdapter typeAdapter : f.typeAdapaters){
-            try {
-                //if(typeAdapter.isAdapterForType(type.getType())) {
-                    //typeAdapter.setDelegate(delegate);
-                    DelegateTypeAdapter ta = typeAdapter.useInstance();
+        boolean b1 = Utils.isToday(cal1);
+        boolean b2 = Utils.isToday(cal2);
 
-                //}
-            } catch (Exception e){
-                Log.e("DTAF", e.getMessage());
-            }
-        }
+        Log.i("MAIN", "Ended on create");
     }
 }
