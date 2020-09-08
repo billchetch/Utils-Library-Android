@@ -1,20 +1,14 @@
 package net.chetch.utils;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.gson.TypeAdapterFactory;
-
 import net.chetch.utilities.DelegateTypeAdapter;
-import net.chetch.utilities.DelegateTypeAdapterFactory;
-import net.chetch.utilities.EnumTypeAdapater;
 import net.chetch.utilities.Utils;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
