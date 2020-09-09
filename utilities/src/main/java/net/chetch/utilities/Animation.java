@@ -3,11 +3,15 @@ package net.chetch.utilities;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.view.View;
 
 public class Animation {
 
-    static public void flashBackground(final View view, int flashColor, int duration, int repeat){
+    //deprecated as of 09/09/2020 use 'flash' instead
+    static public ValueAnimator flashBackground(final View view, int flashColor, int duration, int repeat){
         int bgColour = Color.TRANSPARENT;
         if(view.getBackground() != null){
             bgColour = ((ColorDrawable)view.getBackground()).getColor();
@@ -20,8 +24,29 @@ public class Animation {
                 view.setBackgroundColor((int) valueAnimator.getAnimatedValue());
             }
         });
-        if(repeat > 0)colorAnimation.setRepeatCount(repeat);
+        colorAnimation.setRepeatCount(repeat);
         colorAnimation.start();
+        return colorAnimation;
+    }
 
+    static public ValueAnimator flash(final Drawable drawable, int fromColour, int toColour, int duration, int repeat){
+        ValueAnimator colorAnimation = ValueAnimator.ofArgb(fromColour, toColour, fromColour);
+        colorAnimation.setDuration(duration);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int colour = (int) valueAnimator.getAnimatedValue();
+                if (drawable instanceof ShapeDrawable) {
+                    ((ShapeDrawable)drawable).getPaint().setColor(colour);
+                } else if (drawable instanceof GradientDrawable) {
+                    ((GradientDrawable)drawable).setColor(colour);
+                } else if (drawable instanceof ColorDrawable) {
+                    ((ColorDrawable)drawable).setColor(colour);
+                }
+            }
+        });
+        colorAnimation.setRepeatCount(repeat);
+        colorAnimation.start();
+        return colorAnimation;
     }
 }
