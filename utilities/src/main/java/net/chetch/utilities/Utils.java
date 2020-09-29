@@ -283,6 +283,55 @@ public class Utils {
         return Utils.date2cal(dateFormat.parse(dateString));
     }
 
+    public  enum DurationFormat{
+        D_H_M_S,
+        DAYS_HOURS_MINS_SECS
+    }
+
+    private static String pluralise(int val, String delimiter, String one, String many){
+        return val + delimiter + (val == 1 ? one : many);
+    }
+
+    private static String pluralise(int val, String one){
+        return pluralise(val, " ", one, one + "s");
+    }
+
+    public static String formatDuration(long durationInMillis, DurationFormat durationFormat) {
+        if (durationInMillis <= 0) return null;
+        String formatted = "";
+        switch(durationFormat){
+            case DAYS_HOURS_MINS_SECS:
+            case D_H_M_S:
+                int totalSecs = (int)(durationInMillis / 1000);
+                int totalDays = totalSecs / (24*3600);
+                int remainderSecs = (totalSecs - totalDays*24*3600);
+                int remainderHours = remainderSecs / 3600;
+                remainderSecs = remainderSecs - remainderHours*3600;
+                int remainderMinutes = remainderSecs / 60;
+                remainderSecs = remainderSecs - remainderMinutes*60;
+
+                boolean longformat = durationFormat == DurationFormat.DAYS_HOURS_MINS_SECS;
+                if(totalDays > 0){
+                    formatted += longformat ? pluralise(totalDays, "day") : totalDays + "d";
+                }
+                if(remainderHours > 0){
+                    formatted += " " + (longformat ? pluralise(remainderHours, "hour") : remainderHours +  "h");
+                }
+                if(remainderMinutes > 0){
+                    formatted += " " + (longformat ? pluralise(remainderMinutes, "min") : remainderMinutes + "m");
+                }
+                if(remainderSecs > 0){
+                    formatted += " " + (longformat ? pluralise(remainderSecs, "sec") : remainderSecs + "s");
+                }
+                break;
+        }
+        return formatted.trim();
+    }
+
+    public static String formatDuration(long durationInMillis){
+        return formatDuration(durationInMillis, DurationFormat.DAYS_HOURS_MINS_SECS);
+    }
+
     /*
     Distance funcs
      */
