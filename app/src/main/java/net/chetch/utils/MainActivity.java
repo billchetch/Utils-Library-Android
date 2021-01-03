@@ -4,11 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import net.chetch.utilities.DatePeriod;
 import net.chetch.utilities.DelegateTypeAdapter;
 import net.chetch.utilities.Utils;
 
 import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
+
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,19 +35,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void logDatePeriod(DatePeriod dp){
+        String dateFormat = "yyyy-MM-dd HH:mm:ss";
+        Log.i("MAIN", "From: " + Utils.formatDate(dp.fromDate, dateFormat) + " To: " + Utils.formatDate(dp.toDate, dateFormat));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Calendar cal1 = Calendar.getInstance();
-        cal1 = Utils.calendarSetHour(cal1, 0);
-        Calendar cal2 = Calendar.getInstance();
-        cal2.add(Calendar.DATE, 1);
-        cal2 = Utils.calendarSetHour(cal2, 0);
-
-        boolean b1 = Utils.isToday(cal1);
-        boolean b2 = Utils.isToday(cal2);
+        logDatePeriod(DatePeriod.getDayPeriod(0));
+        logDatePeriod(DatePeriod.getDayPeriod(-1));
 
         Log.i("MAIN", "Ended on create");
     }
