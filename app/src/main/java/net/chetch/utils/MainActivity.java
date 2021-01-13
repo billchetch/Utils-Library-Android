@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void logDatePeriod(DatePeriod dp){
         String dateFormat = "yyyy-MM-dd HH:mm:ss";
-        Log.i("MAIN", "From: " + Utils.formatDate(dp.fromDate, dateFormat) + " To: " + Utils.formatDate(dp.toDate, dateFormat));
+        Log.i("MAIN", "Time Unit: " + dp.timeUnit + " ... From: " + Utils.formatDate(dp.fromDate, dateFormat) + " To: " + Utils.formatDate(dp.toDate, dateFormat));
     }
 
     @Override
@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        logDatePeriod(DatePeriod.getDayPeriod(0));
-        logDatePeriod(DatePeriod.getDayPeriod(-1));
+        DatePeriod period = DatePeriod.getPeriod(TimeUnit.DAYS, 1, 0);
+        logDatePeriod(period);
 
         Log.i("MAIN", "Ended on create");
     }

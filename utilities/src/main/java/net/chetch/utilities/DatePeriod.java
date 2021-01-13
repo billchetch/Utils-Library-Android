@@ -1,25 +1,15 @@
 package net.chetch.utilities;
 
+import android.util.MonthDisplayHelper;
+
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 public class DatePeriod{
-    public Calendar fromDate;
-    public Calendar toDate;
 
-    public DatePeriod(Calendar fromDate, Calendar toDate){
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-    }
-
-    public DatePeriod(long fromMillis, long toMillis){
-        Calendar fromDate = Calendar.getInstance();
-        fromDate.setTimeInMillis(fromMillis);
-        Calendar toDate = Calendar.getInstance();
-        toDate.setTimeInMillis(toMillis);
-
-        this.fromDate = fromDate;
-        this.toDate = toDate;
+    public enum InitiaDateOptions{
+        NOW_AS_END_OF_PERIOD,
+        NOW_AS_START_OF_PERIOD
     }
 
     public static DatePeriod getPeriod(Calendar initialDate, TimeUnit timeUnit, int numberOfTimeUnits, int periodOffset){
@@ -28,34 +18,80 @@ public class DatePeriod{
         long fromMillis = initialDate.getTimeInMillis() + durationInMillis*periodOffset;
         long toMillis = fromMillis + durationInMillis;
 
-        return new DatePeriod(fromMillis, toMillis);
+        return new DatePeriod(fromMillis, toMillis, timeUnit);
+    }
+
+    public static Calendar getInitialDate(TimeUnit timeUnit, int offset){
+        Calendar initialDate = Calendar.getInstance();
+        switch(timeUnit){
+            case HOURS:
+                initialDate.set(Calendar.MINUTE, 0);
+                initialDate.set(Calendar.SECOND, 0);
+                break;
+
+            case DAYS:
+                initialDate = Utils.calendarZeroTime(initialDate);
+                break;
+        }
+
+        long millis = initialDate.getTimeInMillis();
+        if(offset != 0)initialDate.setTimeInMillis(millis + TimeUnit.MILLISECONDS.convert(offset, timeUnit));
+
+        return initialDate;
+    }
+
+
+    public static DatePeriod getPeriod(TimeUnit timeUnit, InitiaDateOptions initiaDateOptions, int numberOfTimeUnits, int periodOffset){
+        int offset = 0;
+        switch(initiaDateOptions){
+            case NOW_AS_END_OF_PERIOD:
+                offset = 1 - numberOfTimeUnits;
+                break;
+            case NOW_AS_START_OF_PERIOD:
+                offset = 0;
+                break;
+        }
+
+        Calendar initialDate = getInitialDate(timeUnit, offset);
+        return getPeriod(initialDate, timeUnit, numberOfTimeUnits, periodOffset);
     }
 
     public static DatePeriod getPeriod(TimeUnit timeUnit, int numberOfTimeUnits, int periodOffset){
-        return getPeriod(Calendar.getInstance(), timeUnit, numberOfTimeUnits, periodOffset);
+        return getPeriod(timeUnit, InitiaDateOptions.NOW_AS_END_OF_PERIOD, numberOfTimeUnits, periodOffset);
     }
 
-    public static DatePeriod getHourPeriod(int periodOffset, int numberOfUnits){
-        return getPeriod(TimeUnit.HOURS, numberOfUnits, periodOffset);
+    //Instance
+    public Calendar fromDate;
+    public Calendar toDate;
+    public TimeUnit timeUnit;
+
+    public DatePeriod(Calendar fromDate, Calendar toDate, TimeUnit timeUnit){
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.timeUnit = timeUnit;
     }
 
-    public static DatePeriod getHourPeriod(int periodOffset){
-        return getHourPeriod(periodOffset, 1);
+    public DatePeriod(long fromMillis, long toMillis, TimeUnit timeUnit){
+        Calendar fromDate = Calendar.getInstance();
+        fromDate.setTimeInMillis(fromMillis);
+        Calendar toDate = Calendar.getInstance();
+        toDate.setTimeInMillis(toMillis);
+
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.timeUnit = timeUnit;
     }
 
-    public static DatePeriod getDayPeriod(int periodOffset, int numberOfUnits){
-        return getPeriod(TimeUnit.DAYS, numberOfUnits, periodOffset);
+    public long getDuration(TimeUnit timeUnit){
+        long durationInMillis = toDate.getTimeInMillis() - fromDate.getTimeInMillis();
+        return timeUnit.convert(durationInMillis, TimeUnit.MILLISECONDS);
     }
 
-    public static DatePeriod getDayPeriod(int periodOffset){
-        return getDayPeriod(periodOffset, 1);
+    public long getDuration(){
+        return getDuration(TimeUnit.MILLISECONDS);
     }
 
-    public static DatePeriod getWeekPeriod(int periodOffset, int numberOfUnits){
-        return getPeriod(TimeUnit.DAYS, numberOfUnits, periodOffset);
-    }
-
-    public static DatePeriod getWeekPeriod(int periodOffset){
-        return getWeekPeriod(periodOffset, 1);
+    public String toString(String dateFormat){
+        return Utils.formatDate(fromDate, dateFormat) + " to " + Utils.formatDate(toDate, dateFormat);
     }
 }
