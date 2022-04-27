@@ -43,7 +43,7 @@ public class Logger {
 
     public static boolean write(String logType, String s, boolean prepend){
         String date = Utils.formatDate(Calendar.getInstance(), dateFormat);
-        String data = date + t(2) + logType + t() + s;
+        String data = date + t(2) + logType + t() + (s == null ? "<null>" : s);
 
         if(prepend){
             String oldData = read();
