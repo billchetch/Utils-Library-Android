@@ -6,6 +6,7 @@ import android.util.Log;
 
 import net.chetch.utilities.DatePeriod;
 import net.chetch.utilities.DelegateTypeAdapter;
+import net.chetch.utilities.SLog;
 import net.chetch.utilities.Utils;
 
 import java.lang.reflect.Type;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void logDatePeriod(DatePeriod dp){
         String dateFormat = "yyyy-MM-dd HH:mm:ss";
-        Log.i("MAIN", "Time Unit: " + dp.timeUnit + " ... From: " + Utils.formatDate(dp.fromDate, dateFormat) + " To: " + Utils.formatDate(dp.toDate, dateFormat));
+        if( SLog.LOG)SLog.i("MAIN", "Time Unit: " + dp.timeUnit + " ... From: " + Utils.formatDate(dp.fromDate, dateFormat) + " To: " + Utils.formatDate(dp.toDate, dateFormat));
     }
 
     @Override
@@ -48,6 +49,6 @@ public class MainActivity extends AppCompatActivity {
         DatePeriod period = DatePeriod.getPeriod(TimeUnit.DAYS, 1, 0);
         logDatePeriod(period);
 
-        Log.i("MAIN", "Ended on create");
+        if(SLog.LOG)SLog.i("MAIN", "Ended on create");
     }
 }

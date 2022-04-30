@@ -33,7 +33,7 @@ public class DelegateTypeAdapterFactory implements TypeAdapterFactory {
                    return typeAdapter.useInstance();
                }
            } catch (Exception e){
-                Log.e("DTAF", e.getMessage());
+                if(SLog.LOG)SLog.e("DTAF", e.getMessage());
            }
         }
 

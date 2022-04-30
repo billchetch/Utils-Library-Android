@@ -40,7 +40,7 @@ abstract public class DelegateTypeAdapter<T> extends TypeAdapter<T>{
             ta.setDelegate(gson, delegate);
             return ta;
         } catch (Exception e){
-            Log.e("DTA", e.getMessage());
+            if(SLog.LOG)SLog.e("DTA", e.getMessage());
             return null;
         }
     }
