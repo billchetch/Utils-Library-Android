@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class Animation {
 
@@ -49,5 +51,29 @@ public class Animation {
         colorAnimation.setRepeatCount(repeat);
         colorAnimation.start();
         return colorAnimation;
+    }
+
+    static public ValueAnimator animateHeight(final View view, int from, int to, int duration){
+        //ValueAnimator.
+        final ViewGroup.LayoutParams lp = view.getLayoutParams();
+        view.requestLayout();
+        lp.height = from;
+        view.setLayoutParams(lp);
+        ValueAnimator anim = ValueAnimator.ofInt(from, to);
+        anim.setDuration(duration);
+
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int dim = (int) valueAnimator.getAnimatedValue();
+                lp.height = dim;
+                view.setLayoutParams(lp);
+                view.requestLayout();
+            }
+        });
+
+        anim.start();
+
+        return anim;
     }
 }
