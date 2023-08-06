@@ -288,8 +288,9 @@ public class Utils {
     }
 
     public  enum DurationFormat{
-        D_H_M_S,
-        DAYS_HOURS_MINS_SECS
+        D_H_M_S, //d h m s
+        DAYS_HOURS_MINS_SECS, //days hours mins secs
+        D0H0M0S0 //[0.]00:00:00
     }
 
     private static String pluralise(int val, String delimiter, String one, String many){
@@ -303,17 +304,17 @@ public class Utils {
     public static String formatDuration(long durationInMillis, DurationFormat durationFormat) {
         if (durationInMillis <= 0) return null;
         String formatted = "";
+        int totalSecs = (int)(durationInMillis / 1000);
+        int totalDays = totalSecs / (24*3600);
+        int remainderSecs = (totalSecs - totalDays*24*3600);
+        int remainderHours = remainderSecs / 3600;
+        remainderSecs = remainderSecs - remainderHours*3600;
+        int remainderMinutes = remainderSecs / 60;
+        remainderSecs = remainderSecs - remainderMinutes*60;
+
         switch(durationFormat){
             case DAYS_HOURS_MINS_SECS:
             case D_H_M_S:
-                int totalSecs = (int)(durationInMillis / 1000);
-                int totalDays = totalSecs / (24*3600);
-                int remainderSecs = (totalSecs - totalDays*24*3600);
-                int remainderHours = remainderSecs / 3600;
-                remainderSecs = remainderSecs - remainderHours*3600;
-                int remainderMinutes = remainderSecs / 60;
-                remainderSecs = remainderSecs - remainderMinutes*60;
-
                 boolean longformat = durationFormat == DurationFormat.DAYS_HOURS_MINS_SECS;
                 if(totalDays > 0){
                     formatted += longformat ? pluralise(totalDays, "day") : totalDays + "d";
@@ -327,6 +328,15 @@ public class Utils {
                 if(remainderSecs > 0){
                     formatted += " " + (longformat ? pluralise(remainderSecs, "sec") : remainderSecs + "s");
                 }
+                break;
+
+            case D0H0M0S0:
+                if(totalDays > 0){
+                    formatted += totalDays + ".";
+                }
+                formatted += (remainderHours > 9 ?  "" : "0") + remainderHours + ":";
+                formatted += (remainderMinutes > 9 ? "" :  "0") + remainderMinutes + ":";
+                formatted += (remainderSecs > 9 ? "" : "0") + remainderSecs + ":";
                 break;
         }
         return formatted.trim();
