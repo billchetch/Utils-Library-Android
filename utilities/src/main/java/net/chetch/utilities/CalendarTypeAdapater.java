@@ -2,6 +2,7 @@ package net.chetch.utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -31,7 +32,11 @@ public class CalendarTypeAdapater extends TypeAdapter<Calendar> {
 
     @Override
     public Calendar read(JsonReader in) throws IOException{
-        Date read = dateTypeAdapter.read(in);
-        return Utils.date2cal(read);
+        try {
+            Date read = dateTypeAdapter.read(in);
+            return Utils.date2cal(read);
+        } catch (JsonSyntaxException ex){
+            return null;
+        }
     }
 }
