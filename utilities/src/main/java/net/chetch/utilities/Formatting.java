@@ -17,6 +17,27 @@ public class Formatting {
         return new String(bitString);
     }
 
+    public static String getBitString(Integer n){
+        return getBitString(n, 4, '-');
+    }
 
+    public static String getBitString(Byte n){
+        return getBitString((int)n, 1, '-');
+    }
+
+    public static String getBitString(Short n){
+        return getBitString((int)n, 2, '-');
+    }
+
+    public static String getByteString(byte[] bytes){
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for(byte b : bytes){
+            if(i > 0)sb.append(",");
+            sb.append(String.format("%02x", b));
+            i++;
+        }
+        return sb.toString();
+    }
 
 }
