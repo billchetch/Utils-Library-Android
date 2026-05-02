@@ -22,7 +22,7 @@ public class Formatting {
     }
 
     public static String getBitString(Byte n){
-        return getBitString((int)n, 1, '-');
+        return getBitString((int)(n & 0xFF), 1, '-');
     }
 
     public static String getBitString(Short n){
