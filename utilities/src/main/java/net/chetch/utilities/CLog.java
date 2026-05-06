@@ -1,14 +1,16 @@
 package net.chetch.utilities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 public class CLog<T extends CLog.ILogItem> {
 
     public interface ILogItem{
-        int id = 0;
-
-        LocalDateTime created = null;
+        int getID();
+        LocalDateTime getCreated();
     }
 
     public interface IFilter<T>{
@@ -74,7 +76,25 @@ public class CLog<T extends CLog.ILogItem> {
         return matches;
     }
 
-    public void copyTo(Collection<T> target, boolean reverse, Collection<IFilter<T>> filters){
+    public T find(Collection<IFilter<T>> filters){
+        synchronized (addLock) {
+            for (int i = 0; i < count; i++) {
+                T item = get(i);
+                if (matches(item, filters)) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    public T find(IFilter<T> filter){
+        ArrayList<IFilter<T>> filters = new ArrayList<>();
+        filters.add(filter);
+        return find(filters);
+    }
+
+    public void copyTo(List<T> target, boolean reverse, Collection<IFilter<T>> filters, boolean sortResult){
         synchronized (addLock) {
             for (int i = 0; i < count; i++) {
                 int idx = reverse ? count - 1 - i : i;
@@ -84,10 +104,22 @@ public class CLog<T extends CLog.ILogItem> {
                 }
             }
         }
+
+        if(sortResult){
+            target.sort((t1, t2) -> {
+                if(t1.getCreated().isBefore(t2.getCreated())){
+                    return 1;
+                } else if(t2.getCreated().isBefore(t1.getCreated())){
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+        }
     }
 
-    public void copyTo(Collection<T> target){
-        copyTo(target, false, null);
+    public void copyTo(List<T> target, boolean sortResult){
+        copyTo(target, false, null, sortResult);
     }
 
 }
