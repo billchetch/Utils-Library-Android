@@ -76,10 +76,11 @@ public class CLog<T extends CLog.ILogItem> {
         return matches;
     }
 
-    public T find(Collection<IFilter<T>> filters){
+    public T find(Collection<IFilter<T>> filters, boolean reverse){
         synchronized (addLock) {
             for (int i = 0; i < count; i++) {
-                T item = get(i);
+                int idx = reverse ? count - 1 - i : i;
+                T item = get(idx);
                 if (matches(item, filters)) {
                     return item;
                 }
@@ -88,11 +89,12 @@ public class CLog<T extends CLog.ILogItem> {
         return null;
     }
 
-    public T find(IFilter<T> filter){
+    public T find(IFilter<T> filter, boolean reverse){
         ArrayList<IFilter<T>> filters = new ArrayList<>();
         filters.add(filter);
-        return find(filters);
+        return find(filters, reverse);
     }
+
 
     public void copyTo(List<T> target, boolean reverse, Collection<IFilter<T>> filters, boolean sortResult){
         synchronized (addLock) {
