@@ -24,6 +24,8 @@ public class CLog<T extends CLog.ILogItem> {
     private int tail = 0; // Point to next empty spot
     private int count = 0; // Number of items currently stored
 
+    private long totalCount = 0;
+
     private final  Object addLock = new Object();
 
 
@@ -43,6 +45,7 @@ public class CLog<T extends CLog.ILogItem> {
             } else {
                 head = (head + 1) % size; // Overwrite oldest data
             }
+            totalCount++;
         }
     }
 
@@ -62,6 +65,8 @@ public class CLog<T extends CLog.ILogItem> {
     public int size(){
         return count;
     }
+
+    public long getTotalCount(){ return totalCount; }
 
     public boolean matches(T item, Collection<IFilter<T>> filters){
         boolean matches = true;

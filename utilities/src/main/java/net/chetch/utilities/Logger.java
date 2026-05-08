@@ -8,6 +8,8 @@ import java.util.List;
 public class Logger {
     private static Context ctx = null;
     private static String logFile;
+
+    private static boolean initialised = false;
     private static String lineFeed = "\n";
     private static String tabSpace = "\t";
     private static int maxLineCount = 100;
@@ -16,6 +18,7 @@ public class Logger {
     public static void init(Context context, String filename){
         ctx = context;
         logFile = filename;
+        initialised = true;
     }
 
     public static void init(Context context, String filename, int maxLines){
@@ -42,6 +45,10 @@ public class Logger {
     }
 
     public static boolean write(String logType, String s, boolean prepend){
+        if(!initialised){
+            return false;
+        }
+
         String date = Utils.formatDate(Calendar.getInstance(), dateFormat);
         String data = date + t(2) + logType + t() + (s == null ? "<null>" : s);
 
