@@ -68,6 +68,13 @@ public class CLog<T extends CLog.ILogItem> {
 
     public long getTotalCount(){ return totalCount; }
 
+    public void clear(){
+        head = 0; // Point to start of data
+        tail = 0; // Point to next empty spot
+        count = 0; // Number of items currently stored
+        totalCount = 0;
+    }
+
     public boolean matches(T item, Collection<IFilter<T>> filters){
         boolean matches = true;
         if(filters != null) {
